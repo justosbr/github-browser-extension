@@ -8,5 +8,5 @@
 
 
 # How to use
-Enter any Github pull request page and it will display a new button at the bottom of the right sidebar
+Enter any Github pull request page and it will display a new button at the bottom of the right sidebar. Just click it and it will copy everything to your clipboard. You should then paste this into the PR's description.
 ![Button](images/button.jpg)
