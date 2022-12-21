@@ -1,18 +1,34 @@
-(async () => {
-  console.log('contentScript', chrome, location.href);
+(() => {
+  let githubScript
 
-  if (!isPullRequestPage()) return;
+  chrome.runtime.onMessage.addListener((obj, sender, response) => {
+    main();
+  })
 
-  const button = createButton();
-  addButtonToSidebar(button);
+  importGithubScript();
 
-  const src = chrome.runtime.getURL("scripts/github.js");
-  const githubScript = await import(src);
+  main();
 
+
+  function main() {
+    if (!isPullRequestPage()) return;
+
+    const button = createButton();
+    addButtonToSidebar(button);
+  }
 
 
   function isPullRequestPage() {
     return location.href.includes('github.com') && location.href.includes('/pull/');
+  }
+
+  function importGithubScript() {
+    const src = chrome.runtime.getURL("scripts/github.js");
+
+    import(src)
+      .then((data) => {
+        githubScript = data;
+      });
   }
 
   function createButton() {
@@ -34,8 +50,10 @@
   }
 
   function addButtonToSidebar(button) {
-    const sidebar = document.getElementById('partial-discussion-sidebar');
-    sidebar.appendChild(button);
+    setTimeout(() => {
+      const sidebar = document.getElementById('partial-discussion-sidebar');
+      sidebar.appendChild(button);
+    }, 500)
   }
 
   function onButtonClick() {

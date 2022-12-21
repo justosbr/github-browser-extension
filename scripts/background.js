@@ -1,10 +1,7 @@
-chrome.tabs.onUpdated.addListener((tabId, tab) => {
-  if (!tab.url || !tab.url.includes('github.com') || !tab.url.includes('pull')) return;
-
-  console.log(tabId, tab);
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (!changeInfo.url || !changeInfo.url.includes('github.com') || !changeInfo.url.includes('pull')) return;
 
   chrome.tabs.sendMessage(tabId, {
     type: "NEW",
-    loQueQuiera: 'a'
   })
 })
