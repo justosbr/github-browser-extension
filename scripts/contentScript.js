@@ -56,23 +56,47 @@
     setTimeout(() => {
       const sidebar = document.getElementById('partial-discussion-sidebar');
       sidebar.appendChild(button);
-    }, 500)
-  }
-
-  function onButtonClick(button) {
-    const numberOfPrs = githubScript.main();
-    button.innerText = `${numberOfPrs} PRs copied to clipboard!`;
-    button.style.backgroundColor = '#99b1ff';
-    button.disabled = true;
-
-    setTimeout(() => {
-      setButtonDefaultValues(button);
-    }, 1500)
+    }, 500);
   }
 
   function setButtonDefaultValues(button) {
     button.innerText = defaultButtonText;
     button.style = buttonStyle;
     button.disabled = false;
+  }
+
+  function onButtonClick(button) {
+    disableButton(button)
+
+    const loadMoreCommitsButton = document.querySelector('#js-progressive-timeline-item-container button[type=submit]')
+
+    if (!loadMoreCommitsButton) {
+      execute(button);
+      return;
+    }
+
+    loadMoreCommitsButton.click();
+
+    disableButton(button);
+    button.innerText = 'Loading more commits';
+
+    setTimeout(() => {
+      onButtonClick(button);
+    }, 500);
+  }
+
+  function execute(button) {
+    const numberOfPrs = githubScript.main();
+    disableButton(button);
+    button.innerText = `${numberOfPrs} PRs copied to clipboard!`;
+
+    setTimeout(() => {
+      setButtonDefaultValues(button);
+    }, 3000);
+  }
+
+  function disableButton(button, text) {
+    button.disabled = true;
+    button.style.backgroundColor = '#99b1ff';
   }
 })();
