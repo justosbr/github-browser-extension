@@ -18,6 +18,7 @@ export function main() {
     .join('\n');
   navigator.clipboard.writeText(md)
   console.log(`%c${pullRequests.length} PRs copied to the clipboard!\nPaste them in the PR's description.`, 'color: red; font-size: 30px');
+  return pullRequests.length;
 }
 
 function getStory(el) {

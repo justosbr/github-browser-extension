@@ -1,6 +1,19 @@
 (() => {
   let githubScript
 
+  const defaultButtonText = 'Copy included PRs to clipboard';
+  const buttonStyle = `
+    display: block;
+    padding: 1rem;
+    margin: 2rem auto;
+    color: white;
+    background-color: #2457ff;
+    border-radius: 0.5rem;
+    outline: none;
+    border: none;
+    transition: all .25s;
+    `
+
   chrome.runtime.onMessage.addListener((obj, sender, response) => {
     main();
   })
@@ -33,18 +46,8 @@
 
   function createButton() {
     const button = document.createElement('button');
-    button.innerText = 'Copy included PRs to clipboard';
-    button.style = `
-    display: block;
-    padding: 1rem;
-    margin: 2rem auto;
-    color: white;
-    background-color: #2457ff;
-    border-radius: 0.5rem;
-    outline: none;
-    border: none;
-    `
-    button.onclick = () => onButtonClick();
+    button.onclick = () => onButtonClick(button);
+    setButtonDefaultValues(button);
 
     return button;
   }
@@ -56,7 +59,20 @@
     }, 500)
   }
 
-  function onButtonClick() {
-    githubScript.main();
+  function onButtonClick(button) {
+    const numberOfPrs = githubScript.main();
+    button.innerText = `${numberOfPrs} PRs copied to clipboard!`;
+    button.style.backgroundColor = '#99b1ff';
+    button.disabled = true;
+
+    setTimeout(() => {
+      setButtonDefaultValues(button);
+    }, 1500)
+  }
+
+  function setButtonDefaultValues(button) {
+    button.innerText = defaultButtonText;
+    button.style = buttonStyle;
+    button.disabled = false;
   }
 })();
