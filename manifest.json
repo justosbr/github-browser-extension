@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Github PRs",
+  "description": "Allows to get a list of included PRs",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://github.com/"
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "scripts/contentScript.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "Github PR",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "resources": [
+        "scripts/github.js"
+      ]
+    }
+  ]
+}
