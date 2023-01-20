@@ -1,10 +1,11 @@
 
 export function main() {
-  const elements = [...document.querySelectorAll('[data-test-selector="pr-timeline-commits-list"]')]
-    .flatMap((n) => [...n.querySelectorAll('[data-hovercard-type="pull_request"]')]);
+  const prElements = Array.from(document.querySelectorAll('code'))
+    .filter(el => el.textContent.includes('Merge pull request'))
+    .map(el => el.children[1])
 
-  const pullRequests = elements.map((el) => ({
-    number: getPrNumber(el.href),
+  const pullRequests = prElements.map((el) => ({
+    number: el.textContent.replace('#', ''),
     author: getAuthor(el),
     ...getStory(el),
   }));
@@ -36,9 +37,4 @@ function getAuthor(el) {
     console.error(el);
     throw err;
   }
-}
-
-function getPrNumber(link) {
-  const lastSlashIndex = link.lastIndexOf('/') + 1;
-  return link.substring(lastSlashIndex);
 }
