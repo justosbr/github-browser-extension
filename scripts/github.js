@@ -2,10 +2,9 @@
 export function main() {
   const prElements = Array.from(document.querySelectorAll('code'))
     .filter(el => el.textContent.includes('Merge pull request'))
-    .map(el => el.children[1])
 
   const pullRequests = prElements.map((el) => ({
-    number: el.textContent.replace('#', ''),
+    number: getPrNumber(el),
     author: getAuthor(el),
     ...getStory(el),
   }));
@@ -22,8 +21,15 @@ export function main() {
   return pullRequests.length;
 }
 
+function getPrNumber(el) {
+  const index = el.textContent.indexOf('#');
+  const lastIndex = el.textContent.indexOf(' ', index);
+
+  return el.textContent.substring(index + 1, lastIndex)
+}
+
 function getStory(el) {
-  const storyAnchorEl = [...el.parentElement.children].find((e) => e.href?.startsWith('https://app.shortcut.com/justosbr/story/'));
+  const storyAnchorEl = [...el.children].find((e) => e.href?.startsWith('https://app.shortcut.com/justosbr/story/'));
   return {
     storyCode: storyAnchorEl?.innerText,
     storyLink: storyAnchorEl?.href,
